@@ -1,8 +1,8 @@
- ## The `compose` function
-  - [ ] Implement the `compose` function in the `lib/compose.js`file
-  - [ ] The `compose` function takes two functions, f and g and returns you a new function that takes an X and passes that value to g then to f.
+ ## The `pipe` function
+  - [ ] Implement the `pipe` function in the `src/pipe.js`file
+  - [ ] The `pipe` function takes 1 to an inifinity functions and returns a new function that will apply x to all those functions.
 
  
  ``` 
-    (f o g)(x)
+    pipe(f, g, z, ...fs) => x -> f -> g -> z -> ...fs -> result
  ```

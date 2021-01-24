@@ -1,51 +1,50 @@
-import { compose } from "../src/utils";
+import { pipe } from "../src/utils";
 
-describe("compose function", () => {
+describe("pipe function", () => {
   it("It should be a function", () => {
-    expect(typeof compose).toEqual("function");
+    expect(typeof pipe).toEqual("function");
   });
 
-  it("It should take two functions as parameters parameters", () => {
-    expect(compose.length).toEqual(2);
+  it("It should be a function", () => {
+    expect(typeof pipe).toEqual("function");
   });
 
   it("It should return a function", () => {
-    // Given
-    const sendMessage = (message) => `${message}, Xavier`;
-    const upperCase = (phrase) => phrase.toUpperCase();
-
-    // When
-    const actual = compose(upperCase, sendMessage);
-
-    // then
-    expect(typeof actual).toEqual("function");
+    const identity = (x) => x;
+    expect(typeof pipe(identity, identity)).toEqual("function");
   });
 
-  it("The returned function should take 0 or more arguments", () => {
-    // Given
-    const identity = (...args) => args;
-    const composedIdentity = compose(identity, identity);
-    const obj = { composedIdentity };
-
-    // When
-    const spy = jest.spyOn(obj, "composedIdentity");
-    obj.composedIdentity("one two args");
-
-    // Then
-    expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith("one two args");
+  it("It should throw an error if no argument is passed", () => {
+    expect(() => {
+      pipe();
+    }).toThrow("Should provide at least 2 functions");
   });
 
-  it("It should apply the functions from right to left", () => {
+  it("It should call all functions from left to right", () => {
     // Given
-    const sendMessage = (message) => `${message}, Xavier`;
-    const upperCase = (phrase) => phrase.toUpperCase();
+    const removeDotsAndCommas = (x) => x.replace(/(\.|\,)/g, "");
+    const splitOnSpaces = (x) => x.split(" ");
+    const lowerCase = (x) => x.map((e) => e.toLowerCase());
+    const joinWithDashes = (x) => x.join("-");
 
     // When
-    const composed = compose(upperCase, sendMessage);
-    const actual = composed("You are part of the team");
+    const urlSlug = pipe(
+      removeDotsAndCommas,
+      splitOnSpaces,
+      lowerCase,
+      joinWithDashes
+    );
+
+    const welcomeMessage = (message) => `${message}, Xavier`;
+    const upperCase = (x) => x.toUpperCase();
+    const displayWelcomeMessage = pipe(welcomeMessage, upperCase);
 
     // Then
-    expect(actual).toEqual("YOU ARE PART OF THE TEAM, XAVIER");
+    expect(displayWelcomeMessage("Keep on learning")).toEqual(
+      "KEEP ON LEARNING, XAVIER"
+    );
+    expect(urlSlug("My name is bond. James, Bond.")).toEqual(
+      "my-name-is-bond-james-bond"
+    );
   });
 });

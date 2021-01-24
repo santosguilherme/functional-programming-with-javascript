@@ -11,6 +11,6 @@
     "typescript": "^4.0.3"
   },
   "scripts": {
-    "test": "jest --isolatedModules=false --config test/jest.config.js --json --outputFile=jest-report.json"
+    "test": "jest --isolatedModules=false --config jest.config.js --json --outputFile=jest-report.json"
   }
 }
